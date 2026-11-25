@@ -9,10 +9,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 movementInput;
+    private bool canMove = true;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
     }
 
     private void Update()
@@ -39,6 +45,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!canMove)
+            return;
+        
         Vector2 newPosition = rb.position +
             movementInput * moveSpeed * Time.fixedDeltaTime;
 
