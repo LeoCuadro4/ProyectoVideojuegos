@@ -37,15 +37,33 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.GetComponent<GoalVictory>() != null)
+            return;
+
+        Vector2 impactDirection =
+            (Vector2)transform.position - other.ClosestPoint(transform.position);
+
+        StartImpact(impactDirection);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.contactCount == 0)
+            return;
+
+        Vector2 impactDirection =
+            (Vector2)transform.position - collision.GetContact(0).point;
+
+        StartImpact(impactDirection);
+    }
+
+    private void StartImpact(Vector2 impactDirection)
+    {
         if (isColliding)
             return;
 
         isColliding = true;
-
-        Vector2 impactDirection =
-            ((Vector2)transform.position - (Vector2)other.ClosestPoint(transform.position)).normalized;
-
-        StartCoroutine(ImpactEffect(impactDirection));
+        StartCoroutine(ImpactEffect(impactDirection.normalized));
     }
 
     private IEnumerator ImpactEffect(Vector2 direction)
